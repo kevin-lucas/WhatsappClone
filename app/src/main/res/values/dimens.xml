@@ -1,0 +1,5 @@
+<resources>
+    <!-- Logo -->
+    <dimen name="logo_height">200dp</dimen>
+    <dimen name="logo_width">163dp</dimen>
+</resources>
