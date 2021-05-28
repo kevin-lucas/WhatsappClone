@@ -5,37 +5,20 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/colorPrimary"
-    tools:context=".view.LoginActivity">
-
+    tools:context=".RegisterActivity">
 
     <ImageView
-        android:id="@+id/imageView"
+        android:id="@+id/imageView2"
         android:layout_width="@dimen/logo_width"
         android:layout_height="@dimen/logo_height"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:layout_marginEnd="8dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/ic_logotipo" />
-
-    <Button
-        android:id="@+id/button_login"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:layout_marginEnd="16dp"
-        android:background="@color/colorPrimaryDark"
-        android:text="@string/text_button_login"
-        android:textColor="@color/textColorPrimary"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_login_password" />
+        app:srcCompat="@drawable/ic_user_create_account" />
 
     <EditText
-        android:id="@+id/edit_login_email"
+        android:id="@+id/edit_register_email"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -43,20 +26,20 @@
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/textHintColor"
         android:ems="10"
-        android:hint="@string/text_hint_email_hint"
+        android:hint="@string/text_register_hint_email"
         android:inputType="textEmailAddress"
         android:textColor="@color/textColorPrimary"
         android:textColorHint="@color/textHintColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/imageView" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_register_name" />
 
     <EditText
-        android:id="@+id/edit_login_password"
+        android:id="@+id/edit_register_password"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="8dp"
+        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:backgroundTint="@color/textHintColor"
         android:ems="10"
@@ -66,18 +49,36 @@
         android:textColorHint="@color/textHintColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/edit_login_email" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_register_email" />
 
-    <TextView
-        android:id="@+id/text_login_create_account"
-        android:layout_width="wrap_content"
+    <EditText
+        android:id="@+id/edit_register_name"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:text="@string/text_create_account_label"
+        android:layout_marginEnd="16dp"
+        android:backgroundTint="@color/textHintColor"
+        android:ems="10"
+        android:hint="@string/text_register_hint_name"
+        android:inputType="textPersonName"
         android:textColor="@color/textColorPrimary"
-        android:textSize="14sp"
+        android:textColorHint="@color/textHintColor"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button_login" />
+        app:layout_constraintTop_toBottomOf="@+id/imageView2" />
 
+    <Button
+        android:id="@+id/button_register"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="16dp"
+        android:background="@color/colorPrimaryDark"
+        android:text="@string/text_button_register"
+        android:textColor="@color/textColorPrimary"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_register_password" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -12,6 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import br.com.kevinlucas.whatsappmvvm.service.constants.WhatsappConstants
 import br.com.kevinlucas.whatsappmvvm.R
+import br.com.kevinlucas.whatsappmvvm.RegisterActivity
 import br.com.kevinlucas.whatsappmvvm.viewmodel.LoginViewModel
 import com.github.rtoshiro.util.format.SimpleMaskFormatter
 import com.github.rtoshiro.util.format.text.MaskTextWatcher
@@ -42,7 +43,7 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
         observe()
 
         // permissons
-        requestPermissions()
+        //requestPermissions()
 
         verifyLoggedUser()
     }
@@ -50,6 +51,10 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
     override fun onClick(v: View) {
         if (v.id == R.id.button_login) {
             handleLogin()
+        } else if (v.id == R.id.text_login_create_account){
+            val intent = Intent(this, RegisterActivity::class.java)
+            startActivity(intent)
+            finish()
         }
     }
 
@@ -59,12 +64,13 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
 
     private fun setListeners() {
         button_login.setOnClickListener(this)
+        text_login_create_account.setOnClickListener(this)
     }
 
     private fun observe() {
         mViewModel.login().observe(this, Observer {
             if (it) {
-                val intent = Intent(this, ValidatorActivity::class.java)
+                val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
             } else {
@@ -82,22 +88,22 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
 
     fun setMaskFormatter(){
 
-        var smf = SimpleMaskFormatter("+NN")
-        val mtwCode = MaskTextWatcher(edit_code, smf)
-        edit_code.addTextChangedListener(mtwCode)
-
-        smf = SimpleMaskFormatter("NN")
-        val mtwArea = MaskTextWatcher(edit_area, smf)
-        edit_area.addTextChangedListener(mtwArea)
-
-        smf = SimpleMaskFormatter("NNNNN-NNNN")
-        val mtwPhone = MaskTextWatcher(edit_phone, smf)
-        edit_phone.addTextChangedListener(mtwPhone)
+//        var smf = SimpleMaskFormatter("+NN")
+//        val mtwCode = MaskTextWatcher(edit_code, smf)
+//        edit_code.addTextChangedListener(mtwCode)
+//
+//        smf = SimpleMaskFormatter("NN")
+//        val mtwArea = MaskTextWatcher(edit_area, smf)
+//        edit_area.addTextChangedListener(mtwArea)
+//
+//        smf = SimpleMaskFormatter("NNNNN-NNNN")
+//        val mtwPhone = MaskTextWatcher(edit_phone, smf)
+//        edit_phone.addTextChangedListener(mtwPhone)
     }
 
     private fun handleLogin() {
-        val phone = "${edit_code.text}${edit_area.text}${edit_phone.text}"
-        mViewModel.doLogin(removeMaskPhone(phone))
+        //val phone = "${edit_code.text}${edit_area.text}${edit_phone.text}"
+        //mViewModel.doLogin(removeMaskPhone(phone))
     }
 
     private fun removeMaskPhone(phone: String) : String {
