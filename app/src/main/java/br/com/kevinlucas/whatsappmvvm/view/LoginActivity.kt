@@ -12,10 +12,7 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import br.com.kevinlucas.whatsappmvvm.service.constants.WhatsappConstants
 import br.com.kevinlucas.whatsappmvvm.R
-import br.com.kevinlucas.whatsappmvvm.RegisterActivity
 import br.com.kevinlucas.whatsappmvvm.viewmodel.LoginViewModel
-import com.github.rtoshiro.util.format.SimpleMaskFormatter
-import com.github.rtoshiro.util.format.text.MaskTextWatcher
 import kotlinx.android.synthetic.main.activity_login.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
