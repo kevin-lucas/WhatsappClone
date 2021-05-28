@@ -1,4 +1,4 @@
-package br.com.kevinlucas.whatsappmvvm
+package br.com.kevinlucas.whatsappmvvm.service.listener
 
 interface APIListener<T> {
 

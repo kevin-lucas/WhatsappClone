@@ -1,4 +1,4 @@
-package br.com.kevinlucas.whatsappmvvm
+package br.com.kevinlucas.whatsappmvvm.view
 
 import android.Manifest
 import android.content.Context
@@ -10,6 +10,9 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import br.com.kevinlucas.whatsappmvvm.service.constants.Constants
+import br.com.kevinlucas.whatsappmvvm.R
+import br.com.kevinlucas.whatsappmvvm.viewmodel.LoginViewModel
 import com.github.rtoshiro.util.format.SimpleMaskFormatter
 import com.github.rtoshiro.util.format.text.MaskTextWatcher
 import kotlinx.android.synthetic.main.activity_login.*
@@ -29,11 +32,13 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
         this.mContext = this
         this.mViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
 
-        // setMaskFormatter
+        // Seta as mascaras nos campos de texto
         setMaskFormatter()
 
         // Inicializa eventos
         setListeners();
+
+        // setObservers
         observe()
 
         requestPermissions()

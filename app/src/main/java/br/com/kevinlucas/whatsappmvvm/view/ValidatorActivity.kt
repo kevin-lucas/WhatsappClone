@@ -1,7 +1,8 @@
-package br.com.kevinlucas.whatsappmvvm
+package br.com.kevinlucas.whatsappmvvm.view
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import br.com.kevinlucas.whatsappmvvm.R
 
 class ValidatorActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

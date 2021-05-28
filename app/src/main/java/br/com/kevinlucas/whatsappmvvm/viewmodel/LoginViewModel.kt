@@ -1,9 +1,10 @@
-package br.com.kevinlucas.whatsappmvvm
+package br.com.kevinlucas.whatsappmvvm.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import br.com.kevinlucas.whatsappmvvm.service.repository.PersonRepository
 import kotlin.random.Random
 
 class LoginViewModel(application: Application) : AndroidViewModel(application) {

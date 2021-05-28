@@ -1,4 +1,4 @@
-package br.com.kevinlucas.whatsappmvvm
+package br.com.kevinlucas.whatsappmvvm.service.constants
 
 import android.Manifest
 import android.content.Context
