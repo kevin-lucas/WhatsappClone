@@ -30,12 +30,12 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         val token = random.toString()
         val message = "WhatsApp Código de Confirmação: $token"
 
-        mLogin.value = if (mPersonRepository.login(phone, message)) {
-            mSharedPreferences.store(WhatsappConstants.SHARED.TOKEN_KEY_TEMP, token)
-            true
-        } else {
-            false
-        }
+//        mLogin.value = if (mPersonRepository.login(phone, message)) {
+//            mSharedPreferences.store(WhatsappConstants.SHARED.TOKEN_KEY_TEMP, token)
+//            true
+//        } else {
+//            false
+//        }
 
     }
 

@@ -1,22 +1,67 @@
 package br.com.kevinlucas.whatsappmvvm.view
 
+import android.content.Context
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
+import android.widget.Toast
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import br.com.kevinlucas.whatsappmvvm.R
+import br.com.kevinlucas.whatsappmvvm.service.repository.remote.FirebaseClient
 import br.com.kevinlucas.whatsappmvvm.viewmodel.RegisterViewModel
+import com.google.android.gms.tasks.OnCompleteListener
+import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_register.*
 
-class RegisterActivity : AppCompatActivity() {
+class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mViewModel: RegisterViewModel
+    private lateinit var mContext: Context
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_register)
 
         mViewModel = ViewModelProvider(this).get(RegisterViewModel::class.java)
+        mContext = this
 
-        mViewModel.createUserWithLoginAndPassword("teste", "teste")
+        observe()
+        setListeners()
+    }
 
+    override fun onClick(v: View) {
+        if (v.id == R.id.button_register) {
+            handleRegister()
+        }
+    }
+
+    private fun setListeners() {
+        button_register.setOnClickListener(this)
+    }
+
+    private fun observe() {
+        mViewModel.register().observe(this, Observer {
+            if (it){
+                Toast.makeText(this, "Usuário Criado", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Usuário não criado", Toast.LENGTH_SHORT).show()
+            }
+        })
+    }
+
+    private fun handleRegister() {
+        val email = edit_register_email.text.toString()
+        val password = edit_register_password.text.toString()
+
+        FirebaseClient.getFirebaseInstanceAuth().createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, OnCompleteListener {
+            if (it.isSuccessful){
+                Toast.makeText(this, "Usuário Criado", Toast.LENGTH_SHORT).show()
+            } else {
+                Toast.makeText(this, "Usuário não criado", Toast.LENGTH_SHORT).show()
+            }
+        })
+
+        // mViewModel.createUserWithLoginAndPassword(email, password)
     }
 }
