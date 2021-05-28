@@ -10,7 +10,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import br.com.kevinlucas.whatsappmvvm.service.constants.Constants
+import br.com.kevinlucas.whatsappmvvm.service.constants.WhatsappConstants
 import br.com.kevinlucas.whatsappmvvm.R
 import br.com.kevinlucas.whatsappmvvm.viewmodel.LoginViewModel
 import com.github.rtoshiro.util.format.SimpleMaskFormatter
@@ -41,13 +41,20 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
         // setObservers
         observe()
 
+        // permissons
         requestPermissions()
+
+        verifyLoggedUser()
     }
 
     override fun onClick(v: View) {
         if (v.id == R.id.button_login) {
             handleLogin()
         }
+    }
+
+    private fun verifyLoggedUser(){
+        mViewModel.verifyLoggedUser()
     }
 
     private fun setListeners() {
@@ -63,6 +70,12 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
             } else {
                 Toast.makeText(this, "Problema ao enviar SMS, tente novamente!!", Toast.LENGTH_LONG)
                     .show()
+            }
+        })
+
+        mViewModel.loggedUser().observe(this, Observer {
+            if (it) {
+                startActivity(Intent(this, MainActivity::class.java))
             }
         })
     }
@@ -83,27 +96,33 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
     }
 
     private fun handleLogin() {
-        val phone = "5554"
-        mViewModel.doLogin(phone)
+        val phone = "${edit_code.text}${edit_area.text}${edit_phone.text}"
+        mViewModel.doLogin(removeMaskPhone(phone))
+    }
+
+    private fun removeMaskPhone(phone: String) : String {
+        return phone
+            .replace("-", "")
     }
 
     private fun requestPermissions() {
-        if (Constants.hasSMSPermissions(mContext)) {
+        if (WhatsappConstants.hasSMSPermissions(mContext)) {
             return
         }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.Q) {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             EasyPermissions.requestPermissions(
                 this,
                 "You need accept send sms permissions to use this app.",
-                Constants.REQUEST_CODE_SEND_SMS_PERMISSION,
+                WhatsappConstants.REQUEST_CODE_SEND_SMS_PERMISSION,
                 Manifest.permission.INTERNET
             )
         } else {
             EasyPermissions.requestPermissions(
                 this,
                 "You need accept send sms permissions to use this app.",
-                Constants.REQUEST_CODE_SEND_SMS_PERMISSION,
-                Manifest.permission.SEND_SMS
+                WhatsappConstants.REQUEST_CODE_SEND_SMS_PERMISSION,
+                Manifest.permission.SEND_SMS,
+                Manifest.permission.READ_PHONE_STATE
             )
         }
     }

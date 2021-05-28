@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">WhatsappMvvm</string>
+    <string name="text_validator_title">Validação</string>
+    <string name="text_validator_description">Você recebeu um SMS para validação do seu número, digite o código de validação abaixo:</string>
+    <string name="text_hint_validator">Digite o código</string>
+    <string name="text_button_validator">Validar</string>
 </resources>
