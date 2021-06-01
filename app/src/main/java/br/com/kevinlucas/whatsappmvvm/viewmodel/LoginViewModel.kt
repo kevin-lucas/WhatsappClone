@@ -5,6 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import br.com.kevinlucas.whatsappmvvm.service.constants.WhatsappConstants
+import br.com.kevinlucas.whatsappmvvm.service.listener.APIListener
+import br.com.kevinlucas.whatsappmvvm.service.listener.ValidationListener
 import br.com.kevinlucas.whatsappmvvm.service.repository.PersonRepository
 import br.com.kevinlucas.whatsappmvvm.service.repository.local.SecurityPreferences
 import kotlin.random.Random
@@ -12,12 +14,10 @@ import kotlin.random.Random
 class LoginViewModel(application: Application) : AndroidViewModel(application) {
 
     private val mPersonRepository = PersonRepository(application)
-    private val mSharedPreferences = SecurityPreferences(application)
-
-    private val mLogin = MutableLiveData<Boolean>()
+    private val mLogin = MutableLiveData<ValidationListener>()
     private val mLoggedUser = MutableLiveData<Boolean>()
 
-    fun login(): LiveData<Boolean> {
+    fun login(): LiveData<ValidationListener> {
         return mLogin
     }
 
@@ -25,37 +25,28 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
         return mLoggedUser
     }
 
-    fun doLogin(phone: String) {
-        val random = Random.nextInt(9999 - 1000) + 1000
-        val token = random.toString()
-        val message = "WhatsApp Código de Confirmação: $token"
+    fun doLogin(email: String, password: String) {
+        mPersonRepository.login(email, password, object : APIListener<Boolean> {
+            override fun onSuccess(validation: Boolean) {
+                mLogin.value = ValidationListener()
+            }
 
-//        mLogin.value = if (mPersonRepository.login(phone, message)) {
-//            mSharedPreferences.store(WhatsappConstants.SHARED.TOKEN_KEY_TEMP, token)
-//            true
-//        } else {
-//            false
-//        }
+            override fun onFailure(str: String) {
+                mLogin.value = ValidationListener(str)
+            }
 
+        })
     }
 
     /**
     * Verifica se usuário está logado
     */
     fun verifyLoggedUser() {
-
-        val token = mSharedPreferences.get(WhatsappConstants.SHARED.TOKEN_KEY)
-
-        // RetrofitClient.addHeader(token, person)
-
-        val logged = (token != "")
-//
+        val logged = mPersonRepository.verifyLoggedUser()
 //        if (!logged) {
 //            mPriorityRepository.all()
 //        }
-
         mLoggedUser.value = logged
-
     }
 
 }

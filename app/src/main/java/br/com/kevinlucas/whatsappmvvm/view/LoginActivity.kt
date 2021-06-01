@@ -17,8 +17,7 @@ import kotlinx.android.synthetic.main.activity_login.*
 import pub.devrel.easypermissions.AppSettingsDialog
 import pub.devrel.easypermissions.EasyPermissions
 
-class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
-    View.OnClickListener {
+class LoginActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mContext: Context
     private lateinit var mViewModel: LoginViewModel
@@ -30,17 +29,11 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
         this.mContext = this
         this.mViewModel = ViewModelProvider(this).get(LoginViewModel::class.java)
 
-        // Seta as mascaras nos campos de texto
-        setMaskFormatter()
-
         // Inicializa eventos
         setListeners();
 
         // setObservers
         observe()
-
-        // permissons
-        //requestPermissions()
 
         verifyLoggedUser()
     }
@@ -48,14 +41,14 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
     override fun onClick(v: View) {
         if (v.id == R.id.button_login) {
             handleLogin()
-        } else if (v.id == R.id.text_login_create_account){
+        } else if (v.id == R.id.text_login_create_account) {
             val intent = Intent(this, RegisterActivity::class.java)
             startActivity(intent)
             finish()
         }
     }
 
-    private fun verifyLoggedUser(){
+    private fun verifyLoggedUser() {
         mViewModel.verifyLoggedUser()
     }
 
@@ -66,12 +59,12 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
 
     private fun observe() {
         mViewModel.login().observe(this, Observer {
-            if (it) {
+            if (it.success()) {
                 val intent = Intent(this, MainActivity::class.java)
                 startActivity(intent)
                 finish()
             } else {
-                Toast.makeText(this, "Problema ao enviar SMS, tente novamente!!", Toast.LENGTH_LONG)
+                Toast.makeText(this, it.failure(), Toast.LENGTH_LONG)
                     .show()
             }
         })
@@ -83,71 +76,10 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
         })
     }
 
-    fun setMaskFormatter(){
-//        var smf = SimpleMaskFormatter("+NN")
-//        val mtwCode = MaskTextWatcher(edit_code, smf)
-//        edit_code.addTextChangedListener(mtwCode)
-//
-//        smf = SimpleMaskFormatter("NN")
-//        val mtwArea = MaskTextWatcher(edit_area, smf)
-//        edit_area.addTextChangedListener(mtwArea)
-//
-//        smf = SimpleMaskFormatter("NNNNN-NNNN")
-//        val mtwPhone = MaskTextWatcher(edit_phone, smf)
-//        edit_phone.addTextChangedListener(mtwPhone)
-    }
-
     private fun handleLogin() {
-        //val phone = "${edit_code.text}${edit_area.text}${edit_phone.text}"
-        //mViewModel.doLogin(removeMaskPhone(phone))
-    }
-
-    private fun removeMaskPhone(phone: String) : String {
-        return phone
-            .replace("-", "")
-    }
-
-    private fun requestPermissions() {
-        if (WhatsappConstants.hasSMSPermissions(mContext)) {
-            return
-        }
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            EasyPermissions.requestPermissions(
-                this,
-                "You need accept send sms permissions to use this app.",
-                WhatsappConstants.REQUEST_CODE_SEND_SMS_PERMISSION,
-                Manifest.permission.INTERNET
-            )
-        } else {
-            EasyPermissions.requestPermissions(
-                this,
-                "You need accept send sms permissions to use this app.",
-                WhatsappConstants.REQUEST_CODE_SEND_SMS_PERMISSION,
-                Manifest.permission.SEND_SMS,
-                Manifest.permission.READ_PHONE_STATE
-            )
-        }
-    }
-
-    override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {
-
-    }
-
-    override fun onPermissionsDenied(requestCode: Int, perms: MutableList<String>) {
-        if (EasyPermissions.somePermissionPermanentlyDenied(this, perms)) {
-            AppSettingsDialog.Builder(this).build().show()
-        } else {
-            requestPermissions()
-        }
-    }
-
-    override fun onRequestPermissionsResult(
-        requestCode: Int,
-        permissions: Array<out String>,
-        grantResults: IntArray
-    ) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-        EasyPermissions.onRequestPermissionsResult(requestCode, permissions, grantResults, this)
+        val email = edit_login_email.text.toString()
+        val password = edit_login_password.text.toString()
+        mViewModel.doLogin(email, password)
     }
 
 }

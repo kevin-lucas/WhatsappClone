@@ -5,6 +5,7 @@ import br.com.kevinlucas.whatsappmvvm.service.listener.APIListener
 import br.com.kevinlucas.whatsappmvvm.service.model.UserModel
 import br.com.kevinlucas.whatsappmvvm.service.repository.remote.FirebaseClient
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
+import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 
@@ -17,7 +18,7 @@ class PersonRepository(context: Context) : BaseRepository(context) {
                     listener.onSuccess(it.isSuccessful)
                     it.result?.user?.let { it1 -> save(it1.uid, name, email) }
                 } else {
-                    val msg = try {
+                    val error = try {
                         throw it.exception!!
                     } catch (e: FirebaseAuthWeakPasswordException) {
                         "Digite uma senha mais forte, contendo mais caracteres com letras e números!"
@@ -29,11 +30,34 @@ class PersonRepository(context: Context) : BaseRepository(context) {
                         e.printStackTrace()
                         "Algum erro inesperado ocorreu, tente novamente!"
                     }
-                    listener.onFailure(msg)
+                    listener.onFailure(error)
                 }
             }
 
     }
+
+    fun login(email: String, password: String, listener: APIListener<Boolean>) {
+        FirebaseClient.getFirebaseInstanceAuth().signInWithEmailAndPassword(email, password)
+            .addOnCompleteListener {
+                if (it.isSuccessful) {
+                    listener.onSuccess(it.isSuccessful)
+                } else {
+                    val error = try {
+                        throw it.exception!!
+                    } catch (e: FirebaseAuthInvalidUserException) {
+                        "E-mail inválido ou desabilitado, favor informe um e-mail válido!"
+                    } catch (e: FirebaseAuthInvalidCredentialsException) {
+                        "Senha incorreta, favor informe uma senha válida!"
+                    } catch (e: Exception) {
+                        e.printStackTrace()
+                        "Erro ao realizar o login, tente novamente!"
+                    }
+                    listener.onFailure(error)
+                }
+            }
+    }
+
+    fun verifyLoggedUser() = FirebaseClient.getFirebaseInstanceAuth().currentUser != null
 
     private fun save(id: String, name: String, email: String) {
         val ref = FirebaseClient.getFirebaseInstance()
