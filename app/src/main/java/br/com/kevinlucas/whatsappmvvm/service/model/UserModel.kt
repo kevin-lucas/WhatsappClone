@@ -1,8 +1,3 @@
 package br.com.kevinlucas.whatsappmvvm.service.model
 
-class UserModel {
-
-    var name: String = ""
-    var email: String = ""
-
-}
+data class UserModel(val id: String, val name: String, val email: String)

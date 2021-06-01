@@ -4,7 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import br.com.kevinlucas.whatsappmvvm.service.model.UserModel
 import br.com.kevinlucas.whatsappmvvm.service.repository.PersonRepository
+import br.com.kevinlucas.whatsappmvvm.service.repository.remote.FirebaseClient
 
 class RegisterViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -16,8 +18,8 @@ class RegisterViewModel(application: Application) : AndroidViewModel(application
         return mRegister
     }
 
-    fun createUserWithLoginAndPassword(email: String, password: String) {
-        //mRegister.value = mPersonRepository.register(email, password)
+    fun createUserWithLoginAndPassword(name: String, email: String, password: String) {
+        mRegister.value = mPersonRepository.create(name, email, password)
     }
 
 }

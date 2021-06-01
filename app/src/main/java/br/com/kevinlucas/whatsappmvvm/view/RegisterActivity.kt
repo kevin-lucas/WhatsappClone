@@ -42,7 +42,7 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun observe() {
         mViewModel.register().observe(this, Observer {
-            if (it){
+            if (it) {
                 Toast.makeText(this, "Usuário Criado", Toast.LENGTH_SHORT).show()
             } else {
                 Toast.makeText(this, "Usuário não criado", Toast.LENGTH_SHORT).show()
@@ -51,17 +51,10 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun handleRegister() {
+        val name = edit_register_name.text.toString()
         val email = edit_register_email.text.toString()
         val password = edit_register_password.text.toString()
 
-        FirebaseClient.getFirebaseInstanceAuth().createUserWithEmailAndPassword(email, password).addOnCompleteListener(this, OnCompleteListener {
-            if (it.isSuccessful){
-                Toast.makeText(this, "Usuário Criado", Toast.LENGTH_SHORT).show()
-            } else {
-                Toast.makeText(this, "Usuário não criado", Toast.LENGTH_SHORT).show()
-            }
-        })
-
-        // mViewModel.createUserWithLoginAndPassword(email, password)
+        mViewModel.createUserWithLoginAndPassword(name, email, password)
     }
 }

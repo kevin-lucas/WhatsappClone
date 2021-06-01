@@ -84,7 +84,6 @@ class LoginActivity : AppCompatActivity(), EasyPermissions.PermissionCallbacks,
     }
 
     fun setMaskFormatter(){
-
 //        var smf = SimpleMaskFormatter("+NN")
 //        val mtwCode = MaskTextWatcher(edit_code, smf)
 //        edit_code.addTextChangedListener(mtwCode)
