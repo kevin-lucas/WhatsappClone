@@ -12,4 +12,5 @@
     <string name="text_register_hint_email">Digite seu e-mail</string>
     <string name="text_register_hint_password">Digite sua senha</string>
     <string name="text_button_register">Cadastrar</string>
+    <string name="ERROR_PASSWORD_NOT_STRONG">Favor informar uma senha mais forte</string>
 </resources>

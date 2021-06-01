@@ -1,6 +1,7 @@
 package br.com.kevinlucas.whatsappmvvm.view
 
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
@@ -42,10 +43,13 @@ class RegisterActivity : AppCompatActivity(), View.OnClickListener {
 
     private fun observe() {
         mViewModel.register().observe(this, Observer {
-            if (it) {
-                Toast.makeText(this, "Usuário Criado", Toast.LENGTH_SHORT).show()
+            if (it.success()) {
+                Toast.makeText(this, "Usuário criado com sucesso!", Toast.LENGTH_SHORT).show()
+                val it = Intent(this, MainActivity::class.java)
+                startActivity(it)
+                finish()
             } else {
-                Toast.makeText(this, "Usuário não criado", Toast.LENGTH_SHORT).show()
+                Toast.makeText(this, it.failure(), Toast.LENGTH_LONG).show()
             }
         })
     }
