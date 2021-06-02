@@ -14,4 +14,5 @@
     <color name="textHintColor">#E4E1E1</color>
 
     <color name="colorPrimaryDarker">#023933</color>
+    <color name="colorAccent">#3d958a</color>
 </resources>

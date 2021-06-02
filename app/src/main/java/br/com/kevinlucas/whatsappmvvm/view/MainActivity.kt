@@ -1,6 +1,7 @@
 package br.com.kevinlucas.whatsappmvvm.view
 
 import android.content.Intent
+import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -8,28 +9,47 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.widget.Toolbar
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.viewpager.widget.ViewPager
 import br.com.kevinlucas.whatsappmvvm.R
 import br.com.kevinlucas.whatsappmvvm.service.repository.remote.FirebaseClient
+import br.com.kevinlucas.whatsappmvvm.view.adapter.SlidingTabLayout
+import br.com.kevinlucas.whatsappmvvm.view.adapter.TabAdapter
 import br.com.kevinlucas.whatsappmvvm.viewmodel.MainViewModel
 import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-    private lateinit var toolbar: Toolbar
+    private lateinit var mToolbar: Toolbar
     private lateinit var mViewModel: MainViewModel
+    private lateinit var mSlidingTabLayout: SlidingTabLayout
+    private lateinit var mViewPager: ViewPager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        toolbar = findViewById(R.id.toolbar_main)
-        toolbar.title = "WhatsApp"
+        mToolbar = findViewById(R.id.toolbar_main)
+        mToolbar.title = "WhatsApp"
+        setSupportActionBar(mToolbar)
 
+        mSlidingTabLayout = findViewById(R.id.stl_tabs)
+        mViewPager = findViewById(R.id.vp_page)
+
+        mSlidingTabLayout.setSelectedIndicatorColors(
+            ContextCompat.getColor(
+                this,
+                R.color.colorAccent
+            )
+        )
+        mSlidingTabLayout.setDistributeEvenly(true)
+
+        val tabAdapter = TabAdapter(supportFragmentManager)
+        mViewPager.adapter = tabAdapter
+        mSlidingTabLayout.setViewPager(vp_page)
         mViewModel = ViewModelProvider(this).get(MainViewModel::class.java)
-
-        setSupportActionBar(toolbar)
 
         setListeners()
 
@@ -37,7 +57,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     fun setListeners() {
-        button_logout.setOnClickListener(this)
+
     }
 
     fun signOut() {
@@ -57,8 +77,6 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     override fun onClick(v: View) {
-        if (v.id == R.id.button_logout) {
-        }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
