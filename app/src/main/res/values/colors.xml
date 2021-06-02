@@ -13,4 +13,5 @@
     <color name="textColorPrimary">#ffffff</color>
     <color name="textHintColor">#E4E1E1</color>
 
+    <color name="colorPrimaryDarker">#023933</color>
 </resources>

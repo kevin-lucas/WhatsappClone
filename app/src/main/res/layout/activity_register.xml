@@ -78,6 +78,7 @@
         android:background="@color/colorPrimaryDark"
         android:text="@string/text_button_register"
         android:textColor="@color/textColorPrimary"
+        android:theme="@style/defaultActionButton"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/edit_register_password" />

@@ -11,7 +11,6 @@ import com.google.firebase.auth.FirebaseAuthWeakPasswordException
 
 class PersonRepository(context: Context) : BaseRepository(context) {
     fun create(name: String, email: String, password: String, listener: APIListener<Boolean>) {
-
         FirebaseClient.getFirebaseInstanceAuth().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
@@ -58,6 +57,18 @@ class PersonRepository(context: Context) : BaseRepository(context) {
     }
 
     fun verifyLoggedUser() = FirebaseClient.getFirebaseInstanceAuth().currentUser != null
+
+    fun signOut(listener: APIListener<Boolean>) {
+        val auth = FirebaseClient.getFirebaseInstanceAuth()
+
+        auth.signOut()
+
+        if (auth.currentUser == null) {
+            listener.onSuccess(true)
+        } else {
+            listener.onFailure("Error ao realizar o logout, tente novamente!")
+        }
+    }
 
     private fun save(id: String, name: String, email: String) {
         val ref = FirebaseClient.getFirebaseInstance()

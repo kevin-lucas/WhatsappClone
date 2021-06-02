@@ -10,7 +10,7 @@
     </item>
 
     <item
-        android:id="@+id/action_menu"
+        android:id="@+id/action_settings"
         android:orderInCategory="200"
         android:title="@string/action_settings"
         app:showAsAction="never">
