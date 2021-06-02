@@ -13,4 +13,8 @@
     <string name="text_register_hint_password">Digite sua senha</string>
     <string name="text_button_register">Cadastrar</string>
     <string name="ERROR_PASSWORD_NOT_STRONG">Favor informar uma senha mais forte</string>
+    <string name="action_settings">Configurações</string>
+    <string name="action_exit">Sair</string>
+    <string name="action_search">Pesquisar</string>
+    <string name="action_person_add">Adicionar</string>
 </resources>
