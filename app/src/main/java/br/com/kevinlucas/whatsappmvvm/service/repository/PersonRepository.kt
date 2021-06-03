@@ -1,6 +1,7 @@
 package br.com.kevinlucas.whatsappmvvm.service.repository
 
 import android.content.Context
+import br.com.kevinlucas.whatsappmvvm.service.helper.Base64Custom
 import br.com.kevinlucas.whatsappmvvm.service.listener.APIListener
 import br.com.kevinlucas.whatsappmvvm.service.model.UserModel
 import br.com.kevinlucas.whatsappmvvm.service.repository.remote.FirebaseClient
@@ -15,7 +16,7 @@ class PersonRepository(context: Context) : BaseRepository(context) {
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     listener.onSuccess(it.isSuccessful)
-                    it.result?.user?.let { it1 -> save(it1.uid, name, email) }
+                    save(name, email)
                 } else {
                     val error = try {
                         throw it.exception!!
@@ -70,7 +71,8 @@ class PersonRepository(context: Context) : BaseRepository(context) {
         }
     }
 
-    private fun save(id: String, name: String, email: String) {
+    private fun save(name: String, email: String) {
+        val id = Base64Custom.encodeBase64(email)
         val ref = FirebaseClient.getFirebaseInstance()
         val user = UserModel(name, email)
         ref.child("users").child(id).setValue(user)
