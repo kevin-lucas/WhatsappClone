@@ -9,11 +9,13 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.kevinlucas.whatsappmvvm.R
 import br.com.kevinlucas.whatsappmvvm.service.listener.ContactListener
 import br.com.kevinlucas.whatsappmvvm.view.adapter.ContactAdapter
+import br.com.kevinlucas.whatsappmvvm.view.adapter.SimpleDividerItemDecoration
 import br.com.kevinlucas.whatsappmvvm.viewmodel.ContactViewModel
 
 class ContactFragment : Fragment() {
@@ -32,6 +34,8 @@ class ContactFragment : Fragment() {
         val root = inflater.inflate(R.layout.fragment_contact, container, false)
 
         val recycler = root.findViewById<RecyclerView>(R.id.recycler_all_contacts)
+
+        recycler.addItemDecoration(SimpleDividerItemDecoration(context))
         recycler.layoutManager = LinearLayoutManager(context)
         recycler.adapter = mAdapter
 
