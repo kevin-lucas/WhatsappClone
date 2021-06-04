@@ -1,3 +1,5 @@
 package br.com.kevinlucas.whatsappmvvm.service.model
 
-data class UserModel(val id: String, val email: String) {}
+import com.google.firebase.database.Exclude
+
+data class UserModel(@Exclude var id: String? = null, var name: String? = null, var email: String? = null)

@@ -1,5 +1,6 @@
 package br.com.kevinlucas.whatsappmvvm.view
 
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
@@ -7,7 +8,9 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import android.widget.EditText
 import android.widget.Toast
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
@@ -53,7 +56,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
 
         setListeners()
 
-        observer()
+        setObservers()
     }
 
     fun setListeners() {
@@ -64,12 +67,49 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         mViewModel.logout()
     }
 
-    fun observer() {
+    fun openDialogCreateContact() {
+        val dialog: AlertDialog.Builder = AlertDialog.Builder(this)
+        dialog.setTitle("Novo Contato")
+        dialog.setMessage("E-mail do usuário")
+        dialog.setCancelable(false)
+
+        val editContactEmail = EditText(this)
+        dialog.setView(editContactEmail)
+
+        dialog.setPositiveButton("Cadastrar"
+        ) { dialog, which ->
+            val contactEmail = editContactEmail.text.toString()
+
+            if (contactEmail.isEmpty()){
+                Toast.makeText(this, "Preencha o email", Toast.LENGTH_SHORT).show()
+            } else {
+                mViewModel.addContact(contactEmail)
+            }
+        }
+
+        dialog.setNegativeButton("Cancelar"
+        ) { dialog, which ->
+
+        }
+
+        dialog.create()
+        dialog.show()
+    }
+
+    fun setObservers() {
         mViewModel.signOut().observe(this, Observer {
             if (it.success()) {
                 val it = Intent(this, LoginActivity::class.java)
                 startActivity(it)
                 finish()
+            } else {
+                Toast.makeText(this, it.failure(), Toast.LENGTH_LONG).show()
+            }
+        })
+
+        mViewModel.addContact().observe(this, Observer {
+            if (it.success()){
+                Toast.makeText(this, "Contato adicionado com sucesso!", Toast.LENGTH_LONG).show()
             } else {
                 Toast.makeText(this, it.failure(), Toast.LENGTH_LONG).show()
             }
@@ -93,6 +133,10 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
                 true
             }
             R.id.action_settings -> {
+                true
+            }
+            R.id.action_person_add -> {
+                openDialogCreateContact()
                 true
             }
             else -> {

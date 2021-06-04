@@ -16,7 +16,7 @@ class PersonRepository(context: Context) : BaseRepository(context) {
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     listener.onSuccess(it.isSuccessful)
-                    save(name, email)
+                    save(Base64Custom.encodeBase64(email), name, email)
                 } else {
                     val error = try {
                         throw it.exception!!
@@ -71,10 +71,9 @@ class PersonRepository(context: Context) : BaseRepository(context) {
         }
     }
 
-    private fun save(name: String, email: String) {
-        val id = Base64Custom.encodeBase64(email)
+    private fun save(id: String, name: String, email: String) {
         val ref = FirebaseClient.getFirebaseInstance()
-        val user = UserModel(name, email)
+        val user = UserModel(id, name, email)
         ref.child("users").child(id).setValue(user)
     }
 }

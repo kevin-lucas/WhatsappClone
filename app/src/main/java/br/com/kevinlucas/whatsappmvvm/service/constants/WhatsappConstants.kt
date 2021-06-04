@@ -11,8 +11,11 @@ object WhatsappConstants {
 
     // SharedPreferences
     object SHARED {
-        const val TOKEN_KEY = "token"
+        const val TOKEN_KEY = "tokenkey"
         const val TOKEN_KEY_TEMP = "tokentemp"
+        const val PERSON_KEY = "personkey"
+        const val PERSON_NAME = "personname"
+        const val PERSON_EMAIL = "personemail"
     }
 
     fun hasSMSPermissions(context: Context) =
