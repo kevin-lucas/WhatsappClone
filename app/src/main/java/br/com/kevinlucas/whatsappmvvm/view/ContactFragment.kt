@@ -1,6 +1,7 @@
 package br.com.kevinlucas.whatsappmvvm.view
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -48,7 +49,14 @@ class ContactFragment : Fragment() {
     override fun onResume() {
         super.onResume()
         mAdapter.attachListener(mListener)
-        mViewModel.list()
+        mViewModel.list("onResume()")
+        Log.i("ValueEventListener", "onResume()")
+    }
+
+    override fun onStop() {
+        super.onStop()
+        mViewModel.list("onStart()")
+        Log.i("ValueEventListener", "onStop()")
     }
 
     private fun setObservers() {

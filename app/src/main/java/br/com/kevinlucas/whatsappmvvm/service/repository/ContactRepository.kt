@@ -45,40 +45,46 @@ class ContactRepository(context: Context) : BaseRepository(context) {
         })
     }
 
-    private fun list(listener: APIListener<List<ContactModel>>) {
-
+    private fun list(listener: APIListener<List<ContactModel>>, event: String) {
         val personKeyUserLogged = mSharedPreferences.get(WhatsappConstants.SHARED.PERSON_KEY)
         val contacts = arrayListOf<ContactModel>()
-        FirebaseClient.getFirebaseInstance().child("contacts").child(personKeyUserLogged)
-            .addValueEventListener(object : ValueEventListener {
-                override fun onDataChange(snapshot: DataSnapshot) {
+        val valueListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
 
-                    // Limpar lista
-                    contacts.clear()
+                // Limpar lista
+                contacts.clear()
 
-                    for (data: DataSnapshot in snapshot.children) {
-                        val contact = data.getValue<ContactModel>()
-                        if (contact != null) {
-                            contacts.add(contact)
-                        }
-                    }
-
-                    if (contacts.isNotEmpty()){
-                        listener.onSuccess(contacts)
-                    } else {
-                        listener.onFailure("Nenhum contato encontrado")
+                for (data: DataSnapshot in snapshot.children) {
+                    val contact = data.getValue<ContactModel>()
+                    if (contact != null) {
+                        contacts.add(contact)
                     }
                 }
 
-                override fun onCancelled(error: DatabaseError) {
-
+                if (contacts.isNotEmpty()){
+                    listener.onSuccess(contacts)
+                } else {
+                    listener.onFailure("Nenhum contato encontrado")
                 }
-            })
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        }
+
+        if (event == "onResume()"){
+            FirebaseClient.getFirebaseInstance().child("contacts").child(personKeyUserLogged)
+                .addValueEventListener(valueListener)
+        } else {
+            FirebaseClient.getFirebaseInstance().child("contacts").child(personKeyUserLogged)
+                .removeEventListener(valueListener)
+        }
 
     }
 
-    fun all(listener: APIListener<List<ContactModel>>) {
-        list(listener)
+    fun all(listener: APIListener<List<ContactModel>>, event: String) {
+        list(listener, event)
     }
 
     private fun saveContact(email: String, contact: UserModel) {
@@ -90,5 +96,4 @@ class ContactRepository(context: Context) : BaseRepository(context) {
             .child(personKeyUserLogged).child(personKeyContact)
             .setValue(contactModel)
     }
-
 }

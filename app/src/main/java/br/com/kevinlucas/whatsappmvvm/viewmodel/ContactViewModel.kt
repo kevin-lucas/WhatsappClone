@@ -24,7 +24,7 @@ class ContactViewModel(application: Application) : AndroidViewModel(application)
         return mValidation
     }
 
-    fun list() {
+    fun list(event: String) {
         val listener = object : APIListener<List<ContactModel>> {
             override fun onSuccess(model: List<ContactModel>) {
                 mContactList.value = model
@@ -36,8 +36,7 @@ class ContactViewModel(application: Application) : AndroidViewModel(application)
             }
         }
 
-        mContactRepository.all(listener)
+        mContactRepository.all(listener, event)
 
     }
-
 }
