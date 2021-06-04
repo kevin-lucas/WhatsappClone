@@ -1,8 +1,6 @@
 package br.com.kevinlucas.whatsappmvvm.view
 
-import android.content.DialogInterface
 import android.content.Intent
-import android.graphics.Color
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
@@ -17,7 +15,6 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import br.com.kevinlucas.whatsappmvvm.R
-import br.com.kevinlucas.whatsappmvvm.service.repository.remote.FirebaseClient
 import br.com.kevinlucas.whatsappmvvm.view.adapter.SlidingTabLayout
 import br.com.kevinlucas.whatsappmvvm.view.adapter.TabAdapter
 import br.com.kevinlucas.whatsappmvvm.viewmodel.MainViewModel

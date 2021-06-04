@@ -45,6 +45,42 @@ class ContactRepository(context: Context) : BaseRepository(context) {
         })
     }
 
+    private fun list(listener: APIListener<List<ContactModel>>) {
+
+        val personKeyUserLogged = mSharedPreferences.get(WhatsappConstants.SHARED.PERSON_KEY)
+        val contacts = arrayListOf<ContactModel>()
+        FirebaseClient.getFirebaseInstance().child("contacts").child(personKeyUserLogged)
+            .addValueEventListener(object : ValueEventListener {
+                override fun onDataChange(snapshot: DataSnapshot) {
+
+                    // Limpar lista
+                    contacts.clear()
+
+                    for (data: DataSnapshot in snapshot.children) {
+                        val contact = data.getValue<ContactModel>()
+                        if (contact != null) {
+                            contacts.add(contact)
+                        }
+                    }
+
+                    if (contacts.isNotEmpty()){
+                        listener.onSuccess(contacts)
+                    } else {
+                        listener.onFailure("Nenhum contato encontrado")
+                    }
+                }
+
+                override fun onCancelled(error: DatabaseError) {
+
+                }
+            })
+
+    }
+
+    fun all(listener: APIListener<List<ContactModel>>) {
+        list(listener)
+    }
+
     private fun saveContact(email: String, contact: UserModel) {
         val personKeyUserLogged = mSharedPreferences.get(WhatsappConstants.SHARED.PERSON_KEY)
         val personKeyContact = Base64Custom.encodeBase64(email)
