@@ -12,18 +12,19 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.kevinlucas.whatsappmvvm.R
 import br.com.kevinlucas.whatsappmvvm.service.constants.WhatsappConstants
-import br.com.kevinlucas.whatsappmvvm.view.adapter.ChatAdapter
-import br.com.kevinlucas.whatsappmvvm.view.adapter.SimpleDividerItemDecoration
+import br.com.kevinlucas.whatsappmvvm.view.adapter.ChatAdapterRecipient
+import br.com.kevinlucas.whatsappmvvm.view.adapter.ChatAdapterSender
 import br.com.kevinlucas.whatsappmvvm.viewmodel.ChatViewModel
-import br.com.kevinlucas.whatsappmvvm.viewmodel.ContactViewModel
 import kotlinx.android.synthetic.main.activity_chat.*
 
 class ChatActivity : AppCompatActivity(), View.OnClickListener {
 
     private lateinit var mViewModel: ChatViewModel
+    private lateinit var mRecycler: RecyclerView
     private lateinit var mContext: Context
     private lateinit var toolbar: Toolbar
-    private val mAdapter = ChatAdapter()
+    private val mAdapteRecipient = ChatAdapterRecipient()
+    private val mAdapterSender = ChatAdapterSender()
     private var mContactId = ""
     private var mContactName = ""
 
@@ -41,13 +42,11 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         setSupportActionBar(toolbar)
 
         // RecyclerView
-        val recycler = findViewById<RecyclerView>(R.id.recycler_chat_messages)
+        mRecycler = findViewById(R.id.recycler_chat_messages)
         //recycler.addItemDecoration(SimpleDividerItemDecoration(mContext))
-        recycler.layoutManager = LinearLayoutManager(mContext)
-        recycler.adapter = mAdapter
+        mRecycler.layoutManager = LinearLayoutManager(mContext)
 
         loadDataFormActivity()
-
         setListeners()
         setObservers()
     }
@@ -96,7 +95,15 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     private fun setObservers() {
         mViewModel.messages().observe(this, Observer {
             if (it.count() > 0) {
-                mAdapter.updateList(it)
+                for (message in it) {
+                    if (message.idContact == mContactId) {
+                        mRecycler.adapter = mAdapteRecipient
+                        mAdapteRecipient.updateList(it)
+                    } else {
+                        mRecycler.adapter = mAdapterSender
+                        mAdapterSender.updateList(it)
+                    }
+                }
             }
         })
     }
