@@ -1,5 +1,7 @@
 package br.com.kevinlucas.whatsappmvvm.view
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -9,7 +11,6 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.kevinlucas.whatsappmvvm.R
@@ -22,6 +23,7 @@ class ContactFragment : Fragment() {
 
     private lateinit var mViewModel: ContactViewModel
     private lateinit var mListener: ContactListener
+    private lateinit var mContext: Context
     private val mAdapter = ContactAdapter()
 
     override fun onCreateView(
@@ -41,7 +43,8 @@ class ContactFragment : Fragment() {
 
         mListener = object : ContactListener {
             override fun onInitTalk(id: String) {
-                // incia conversa
+                val it = Intent(context, ChatActivity::class.java)
+                startActivity(it)
             }
         }
 
