@@ -22,9 +22,18 @@ class ChatRepository(context: Context) : BaseRepository(context) {
         val messageModel = MessageModel(idRecipient, message)
 
         try {
+
+            // Salva a menssagem para o remetente visualizar
             FirebaseClient.getFirebaseInstance().child("messages")
                 .child(idSender)
                 .child(idRecipient)
+                .push()
+                .setValue(messageModel)
+
+            // Salva a menssagem para o destinário visualizar
+            FirebaseClient.getFirebaseInstance().child("messages")
+                .child(idRecipient)
+                .child(idSender)
                 .push()
                 .setValue(messageModel)
 
@@ -34,7 +43,11 @@ class ChatRepository(context: Context) : BaseRepository(context) {
 
     }
 
-    fun loadAllMessages(listener: APIListener<List<MessageModel>>, event: String, idContact: String) {
+    fun loadAllMessages(
+        listener: APIListener<List<MessageModel>>,
+        event: String,
+        idContact: String
+    ) {
         val idSender = mSharedPreferences.get(WhatsappConstants.SHARED.PERSON_KEY)
         val idRecipient = idContact
         val messages = arrayListOf<MessageModel>()
