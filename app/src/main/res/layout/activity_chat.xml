@@ -28,7 +28,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <EditText
-            android:id="@+id/editTextTextMultiLine"
+            android:id="@+id/edit_chat_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -42,10 +42,11 @@
             android:inputType="textMultiLine" />
 
         <ImageButton
+            android:id="@+id/button_chat_send_message"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:background="@drawable/ic_action_send"
-            android:theme="@style/defaultActionButton"/>
+            android:theme="@style/defaultActionButton" />
 
     </LinearLayout>
 

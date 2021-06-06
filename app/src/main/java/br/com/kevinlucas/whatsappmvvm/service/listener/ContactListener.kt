@@ -5,6 +5,6 @@ interface ContactListener {
     /**
      * Click para edição
      */
-    fun onInitTalk(id: String)
+    fun onInitTalk(idContact: String, nameContact: String)
 
 }

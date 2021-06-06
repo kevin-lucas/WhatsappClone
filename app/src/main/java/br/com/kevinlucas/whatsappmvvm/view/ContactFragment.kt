@@ -14,6 +14,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import br.com.kevinlucas.whatsappmvvm.R
+import br.com.kevinlucas.whatsappmvvm.service.constants.WhatsappConstants
 import br.com.kevinlucas.whatsappmvvm.service.listener.ContactListener
 import br.com.kevinlucas.whatsappmvvm.view.adapter.ContactAdapter
 import br.com.kevinlucas.whatsappmvvm.view.adapter.SimpleDividerItemDecoration
@@ -23,7 +24,6 @@ class ContactFragment : Fragment() {
 
     private lateinit var mViewModel: ContactViewModel
     private lateinit var mListener: ContactListener
-    private lateinit var mContext: Context
     private val mAdapter = ContactAdapter()
 
     override fun onCreateView(
@@ -42,9 +42,13 @@ class ContactFragment : Fragment() {
         recycler.adapter = mAdapter
 
         mListener = object : ContactListener {
-            override fun onInitTalk(id: String) {
-                val it = Intent(context, ChatActivity::class.java)
-                startActivity(it)
+            override fun onInitTalk(id: String, name: String) {
+                val intent = Intent(context, ChatActivity::class.java)
+                val bundle = Bundle()
+                bundle.putString(WhatsappConstants.BUNDLE.CONTACTID, id)
+                bundle.putString(WhatsappConstants.BUNDLE.CONTACTNAME, name)
+                intent.putExtras(bundle)
+                startActivity(intent)
             }
         }
 

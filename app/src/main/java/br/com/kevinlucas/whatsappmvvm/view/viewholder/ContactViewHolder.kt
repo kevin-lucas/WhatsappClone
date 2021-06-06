@@ -18,7 +18,7 @@ class ContactViewHolder(itemView: View, val listener: ContactListener) :
         this.mTextNameContact.text = contact.name
         this.mTextEmailContact.text = contact.email
 
-        mTextNameContact.setOnClickListener { listener.onInitTalk(contact.id.toString()) }
+        mTextNameContact.setOnClickListener { listener.onInitTalk(contact.id.toString(), contact.name.toString()) }
     }
 
 
