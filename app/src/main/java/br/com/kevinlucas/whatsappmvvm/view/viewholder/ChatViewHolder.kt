@@ -9,9 +9,10 @@ import br.com.kevinlucas.whatsappmvvm.service.model.MessageModel
 class ChatViewHolder(itemView: View) :
     RecyclerView.ViewHolder(itemView) {
 
-    private var mTextChatMessageSender: TextView = itemView.findViewById(R.id.text_chat_message_sender)
+    private var mTextChatMessage: TextView =
+        itemView.findViewById(R.id.text_chat_message)
 
-    fun bindData(ms: MessageModel) {
-        this.mTextChatMessageSender.text = ms.message
+    fun bindData(message: MessageModel) {
+        this.mTextChatMessage.text = message.message
     }
 }

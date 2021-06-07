@@ -23,6 +23,11 @@ object WhatsappConstants {
         const val CONTACTNAME = "contactname"
     }
 
+    object LAYOUT {
+        const val MSG_TYPE_LEFT = 0;
+        const val MSG_TYPE_RIGHT = 1;
+    }
+
     fun hasSMSPermissions(context: Context) =
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
             EasyPermissions.hasPermissions(
