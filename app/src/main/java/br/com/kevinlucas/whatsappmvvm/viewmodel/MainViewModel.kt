@@ -7,6 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import br.com.kevinlucas.whatsappmvvm.service.constants.WhatsappConstants
 import br.com.kevinlucas.whatsappmvvm.service.listener.APIListener
 import br.com.kevinlucas.whatsappmvvm.service.listener.ValidationListener
+import br.com.kevinlucas.whatsappmvvm.service.model.ChatModel
 import br.com.kevinlucas.whatsappmvvm.service.repository.ContactRepository
 import br.com.kevinlucas.whatsappmvvm.service.repository.PersonRepository
 import br.com.kevinlucas.whatsappmvvm.service.repository.local.SecurityPreferences

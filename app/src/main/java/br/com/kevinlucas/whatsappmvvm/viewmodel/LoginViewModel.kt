@@ -4,10 +4,9 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import br.com.kevinlucas.whatsappmvvm.service.constants.WhatsappConstants
-import br.com.kevinlucas.whatsappmvvm.service.helper.Base64Custom
 import br.com.kevinlucas.whatsappmvvm.service.listener.APIListener
 import br.com.kevinlucas.whatsappmvvm.service.listener.ValidationListener
+import br.com.kevinlucas.whatsappmvvm.service.model.ChatModel
 import br.com.kevinlucas.whatsappmvvm.service.repository.PersonRepository
 import br.com.kevinlucas.whatsappmvvm.service.repository.local.SecurityPreferences
 import kotlin.random.Random
@@ -17,7 +16,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     private val mPersonRepository = PersonRepository(application)
     private val mLogin = MutableLiveData<ValidationListener>()
     private val mLoggedUser = MutableLiveData<Boolean>()
-    private val mSharedPreferences = SecurityPreferences(application)
 
     fun login(): LiveData<ValidationListener> {
         return mLogin

@@ -3,8 +3,8 @@ package br.com.kevinlucas.whatsappmvvm.service.repository
 import android.content.Context
 import br.com.kevinlucas.whatsappmvvm.service.constants.WhatsappConstants
 import br.com.kevinlucas.whatsappmvvm.service.listener.APIListener
-import br.com.kevinlucas.whatsappmvvm.service.listener.ValidationListener
 import br.com.kevinlucas.whatsappmvvm.service.model.ChatModel
+import br.com.kevinlucas.whatsappmvvm.service.model.ContactModel
 import br.com.kevinlucas.whatsappmvvm.service.model.MessageModel
 import br.com.kevinlucas.whatsappmvvm.service.repository.local.SecurityPreferences
 import br.com.kevinlucas.whatsappmvvm.service.repository.remote.FirebaseClient
@@ -99,24 +99,68 @@ class ChatRepository(context: Context) : BaseRepository(context) {
 
     }
 
-    fun saveChat(idContact: String, message: String) {
+    fun saveChat(idContact: String, nameContact: String, message: String) {
 
         val idSender = mSharedPreferences.get(WhatsappConstants.SHARED.PERSON_KEY)
         val nameSender = mSharedPreferences.get(WhatsappConstants.SHARED.PERSON_NAME)
         val idRecipient = idContact
+        val nameRecipient = nameContact
 
-        val chat = ChatModel(idSender, nameSender, message)
+        val chatSender = ChatModel(idRecipient, nameRecipient, message)
+        val chatRecipient = ChatModel(idSender, nameSender, message)
 
         FirebaseClient.getFirebaseInstance().child("chats")
             .child(idSender)
             .child(idRecipient)
-            .setValue(chat)
+            .setValue(chatSender)
 
         FirebaseClient.getFirebaseInstance().child("chats")
             .child(idRecipient)
             .child(idSender)
-            .setValue(chat)
+            .setValue(chatRecipient)
 
+    }
+
+    private fun listTalks(listener: APIListener<List<ChatModel>>, event: String) {
+        val personKeyUserLogged = mSharedPreferences.get(WhatsappConstants.SHARED.PERSON_KEY)
+        val talks = arrayListOf<ChatModel>()
+        val valueListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+
+                // Limpar lista
+                talks.clear()
+
+                for (data: DataSnapshot in snapshot.children) {
+                    val talk = data.getValue<ChatModel>()
+                    if (talk != null) {
+                        talks.add(talk)
+                    }
+                }
+
+                if (talks.isNotEmpty()){
+                    listener.onSuccess(talks)
+                } else {
+                    listener.onFailure("Nenhuma conversa encontrada")
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+
+            }
+        }
+
+        if (event == "onResume()"){
+            FirebaseClient.getFirebaseInstance().child("chats").child(personKeyUserLogged)
+                .addValueEventListener(valueListener)
+        } else {
+            FirebaseClient.getFirebaseInstance().child("chats").child(personKeyUserLogged)
+                .removeEventListener(valueListener)
+        }
+
+    }
+
+    fun all(listener: APIListener<List<ChatModel>>, event: String) {
+        listTalks(listener, event)
     }
 
 }

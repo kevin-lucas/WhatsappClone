@@ -47,15 +47,20 @@ class PersonRepository(context: Context) : BaseRepository(context) {
 
     fun login(email: String, password: String, listener: APIListener<Boolean>) {
 
-        val firebaseReference = FirebaseClient.getFirebaseInstance().child("users").child(Base64Custom.encodeBase64(email))
+        val firebaseReference = FirebaseClient.getFirebaseInstance()
+            .child("users")
+            .child(Base64Custom.encodeBase64(email))
 
         val valueEventListener = object : ValueEventListener {
             override fun onDataChange(snapshot: DataSnapshot) {
                 val userLogged = snapshot.getValue<UserModel>()
                 if (userLogged != null){
+                    listener.onSuccess(true)
                     mSharedPreferences.store(WhatsappConstants.SHARED.PERSON_KEY, userLogged.id.toString())
                     mSharedPreferences.store(WhatsappConstants.SHARED.PERSON_NAME, userLogged.name.toString())
                     mSharedPreferences.store(WhatsappConstants.SHARED.PERSON_EMAIL, userLogged.email.toString())
+                } else {
+                    listener.onFailure("Erro ao realizar o login, tente novamente!")
                 }
             }
 

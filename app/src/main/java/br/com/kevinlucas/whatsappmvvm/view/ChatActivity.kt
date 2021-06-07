@@ -105,7 +105,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
                     Toast.LENGTH_SHORT
                 ).show()
             } else {
-                mViewModel.saveChat(mContactId, mMessage)
+                mViewModel.saveChat(mContactId, mContactName, mMessage)
             }
         })
     }
