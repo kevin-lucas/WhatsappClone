@@ -33,6 +33,7 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
 
                 mSharedPreferences.remove(WhatsappConstants.SHARED.PERSON_KEY)
                 mSharedPreferences.remove(WhatsappConstants.SHARED.PERSON_EMAIL)
+                mSharedPreferences.remove(WhatsappConstants.SHARED.PERSON_NAME)
 
                 mSignOut.value = ValidationListener()
             }

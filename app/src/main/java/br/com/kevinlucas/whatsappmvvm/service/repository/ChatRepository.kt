@@ -3,6 +3,8 @@ package br.com.kevinlucas.whatsappmvvm.service.repository
 import android.content.Context
 import br.com.kevinlucas.whatsappmvvm.service.constants.WhatsappConstants
 import br.com.kevinlucas.whatsappmvvm.service.listener.APIListener
+import br.com.kevinlucas.whatsappmvvm.service.listener.ValidationListener
+import br.com.kevinlucas.whatsappmvvm.service.model.ChatModel
 import br.com.kevinlucas.whatsappmvvm.service.model.MessageModel
 import br.com.kevinlucas.whatsappmvvm.service.repository.local.SecurityPreferences
 import br.com.kevinlucas.whatsappmvvm.service.repository.remote.FirebaseClient
@@ -15,7 +17,7 @@ class ChatRepository(context: Context) : BaseRepository(context) {
 
     private val mSharedPreferences = SecurityPreferences(context)
 
-    fun sendMessage(contactId: String, message: String) {
+    fun sendMessage(contactId: String, message: String, listener: APIListener<Boolean>) {
 
         val idSender = mSharedPreferences.get(WhatsappConstants.SHARED.PERSON_KEY)
         val idRecipient = contactId
@@ -28,7 +30,13 @@ class ChatRepository(context: Context) : BaseRepository(context) {
                 .child(idSender)
                 .child(idRecipient)
                 .push()
-                .setValue(messageModel)
+                .setValue(messageModel).addOnCompleteListener {
+                    if (it.isSuccessful) {
+                        listener.onSuccess(true)
+                    } else {
+                        listener.onFailure("Erro ao enviar a mensagem, tente novamente!")
+                    }
+                }
 
             // Salva a menssagem para o destinário visualizar
             FirebaseClient.getFirebaseInstance().child("messages")
@@ -88,6 +96,26 @@ class ChatRepository(context: Context) : BaseRepository(context) {
                 .child(idRecipient)
                 .removeEventListener(valueListener)
         }
+
+    }
+
+    fun saveChat(idContact: String, message: String) {
+
+        val idSender = mSharedPreferences.get(WhatsappConstants.SHARED.PERSON_KEY)
+        val nameSender = mSharedPreferences.get(WhatsappConstants.SHARED.PERSON_NAME)
+        val idRecipient = idContact
+
+        val chat = ChatModel(idSender, nameSender, message)
+
+        FirebaseClient.getFirebaseInstance().child("chats")
+            .child(idSender)
+            .child(idRecipient)
+            .setValue(chat)
+
+        FirebaseClient.getFirebaseInstance().child("chats")
+            .child(idRecipient)
+            .child(idSender)
+            .setValue(chat)
 
     }
 

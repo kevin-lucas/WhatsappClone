@@ -13,11 +13,11 @@ import br.com.kevinlucas.whatsappmvvm.service.repository.ChatRepository
 class ChatViewModel(application: Application) : AndroidViewModel(application) {
     private val mChatRepository = ChatRepository(application)
 
-    private val mSendMessage = MutableLiveData<Boolean>()
+    private val mSendMessage = MutableLiveData<ValidationListener>()
     private val mMessagesList = MutableLiveData<List<MessageModel>>()
     private val mValidation = MutableLiveData<ValidationListener>()
 
-    fun send(): LiveData<Boolean> {
+    fun send(): LiveData<ValidationListener> {
         return mSendMessage
     }
 
@@ -26,7 +26,18 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
     }
 
     fun sendMessageChat(contactId: String, message: String) {
-        mChatRepository.sendMessage(contactId, message)
+
+        val listener = object : APIListener<Boolean> {
+            override fun onSuccess(validation: Boolean) {
+                mSendMessage.value = ValidationListener()
+            }
+
+            override fun onFailure(str: String) {
+                mSendMessage.value = ValidationListener(str)
+            }
+        }
+
+        mChatRepository.sendMessage(contactId, message, listener)
     }
 
     fun loadMessages(contactId: String, event: String) {
@@ -43,4 +54,10 @@ class ChatViewModel(application: Application) : AndroidViewModel(application) {
 
         mChatRepository.loadAllMessages(listener, event, contactId)
     }
+
+    fun saveChat(contactId: String, message: String) {
+        mChatRepository.saveChat(contactId, message)
+    }
+
+
 }

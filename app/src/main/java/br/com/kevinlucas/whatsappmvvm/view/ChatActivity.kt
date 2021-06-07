@@ -24,6 +24,7 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     private val mAdapter = ChatAdapter(this)
     private var mContactId = ""
     private var mContactName = ""
+    private var mMessage = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -78,9 +79,9 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun handleInitChat(contactId: String) {
-        val message = edit_chat_message.text.toString()
-        if (!message.isEmpty()) {
-            mViewModel.sendMessageChat(contactId, message)
+        mMessage = edit_chat_message.text.toString()
+        if (mMessage.isNotEmpty()) {
+            mViewModel.sendMessageChat(contactId, mMessage)
             edit_chat_message.setText("")
         } else {
             Toast.makeText(this, "Informe uma menssagem para ser enviada", Toast.LENGTH_SHORT)
@@ -93,6 +94,18 @@ class ChatActivity : AppCompatActivity(), View.OnClickListener {
         mViewModel.messages().observe(this, Observer {
             if (it.count() > 0) {
                 mAdapter.updateList(it)
+            }
+        })
+
+        mViewModel.send().observe(this, Observer {
+            if (!it.success()) {
+                Toast.makeText(
+                    this,
+                    it.failure(),
+                    Toast.LENGTH_SHORT
+                ).show()
+            } else {
+                mViewModel.saveChat(mContactId, mMessage)
             }
         })
     }

@@ -30,10 +30,6 @@ class LoginViewModel(application: Application) : AndroidViewModel(application) {
     fun doLogin(email: String, password: String) {
         mPersonRepository.login(email, password, object : APIListener<Boolean> {
             override fun onSuccess(validation: Boolean) {
-
-                mSharedPreferences.store(WhatsappConstants.SHARED.PERSON_KEY, Base64Custom.encodeBase64(email))
-                mSharedPreferences.store(WhatsappConstants.SHARED.PERSON_EMAIL, email)
-
                 mLogin.value = ValidationListener()
             }
 

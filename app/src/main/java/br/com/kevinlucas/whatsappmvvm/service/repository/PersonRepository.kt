@@ -1,16 +1,25 @@
 package br.com.kevinlucas.whatsappmvvm.service.repository
 
 import android.content.Context
+import br.com.kevinlucas.whatsappmvvm.service.constants.WhatsappConstants
 import br.com.kevinlucas.whatsappmvvm.service.helper.Base64Custom
 import br.com.kevinlucas.whatsappmvvm.service.listener.APIListener
 import br.com.kevinlucas.whatsappmvvm.service.model.UserModel
+import br.com.kevinlucas.whatsappmvvm.service.repository.local.SecurityPreferences
 import br.com.kevinlucas.whatsappmvvm.service.repository.remote.FirebaseClient
 import com.google.firebase.auth.FirebaseAuthInvalidCredentialsException
 import com.google.firebase.auth.FirebaseAuthInvalidUserException
 import com.google.firebase.auth.FirebaseAuthUserCollisionException
 import com.google.firebase.auth.FirebaseAuthWeakPasswordException
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.ValueEventListener
+import com.google.firebase.database.ktx.getValue
 
 class PersonRepository(context: Context) : BaseRepository(context) {
+
+    private val mSharedPreferences = SecurityPreferences(context)
+
     fun create(name: String, email: String, password: String, listener: APIListener<Boolean>) {
         FirebaseClient.getFirebaseInstanceAuth().createUserWithEmailAndPassword(email, password)
             .addOnCompleteListener {
@@ -37,10 +46,30 @@ class PersonRepository(context: Context) : BaseRepository(context) {
     }
 
     fun login(email: String, password: String, listener: APIListener<Boolean>) {
+
+        val firebaseReference = FirebaseClient.getFirebaseInstance().child("users").child(Base64Custom.encodeBase64(email))
+
+        val valueEventListener = object : ValueEventListener {
+            override fun onDataChange(snapshot: DataSnapshot) {
+                val userLogged = snapshot.getValue<UserModel>()
+                if (userLogged != null){
+                    mSharedPreferences.store(WhatsappConstants.SHARED.PERSON_KEY, userLogged.id.toString())
+                    mSharedPreferences.store(WhatsappConstants.SHARED.PERSON_NAME, userLogged.name.toString())
+                    mSharedPreferences.store(WhatsappConstants.SHARED.PERSON_EMAIL, userLogged.email.toString())
+                }
+            }
+
+            override fun onCancelled(error: DatabaseError) {
+                TODO("Not yet implemented")
+            }
+
+        }
+
         FirebaseClient.getFirebaseInstanceAuth().signInWithEmailAndPassword(email, password)
             .addOnCompleteListener {
                 if (it.isSuccessful) {
                     listener.onSuccess(it.isSuccessful)
+                    firebaseReference.addListenerForSingleValueEvent(valueEventListener)
                 } else {
                     val error = try {
                         throw it.exception!!
@@ -55,6 +84,7 @@ class PersonRepository(context: Context) : BaseRepository(context) {
                     listener.onFailure(error)
                 }
             }
+
     }
 
     fun verifyLoggedUser() = FirebaseClient.getFirebaseInstanceAuth().currentUser != null
