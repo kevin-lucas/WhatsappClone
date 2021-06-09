@@ -1,4 +1,4 @@
-# Teste
+# Whatsapp Clone
 
 ### Ambiente Desenvolvimento
 * Java: 1.8.0 ou superior
